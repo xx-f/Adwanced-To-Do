@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>755</width>
+    <height>259</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>9</y>
+      <width>79</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Advanced To Do</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="groupBox">
+    <property name="geometry">
+     <rect>
+      <x>9</x>
+      <y>40</y>
+      <width>741</width>
+      <height>209</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>GroupBox</string>
+    </property>
+    <widget class="QTextEdit" name="tdname">
+     <property name="geometry">
+      <rect>
+       <x>11</x>
+       <y>52</y>
+       <width>271</width>
+       <height>31</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QDateTimeEdit" name="dateTimeEdit">
+     <property name="geometry">
+      <rect>
+       <x>11</x>
+       <y>110</y>
+       <width>112</width>
+       <height>20</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QLabel" name="labeltdname">
+     <property name="geometry">
+      <rect>
+       <x>11</x>
+       <y>33</y>
+       <width>184</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Краткое название для напоминания</string>
+     </property>
+    </widget>
+    <widget class="QCheckBox" name="checkBox">
+     <property name="geometry">
+      <rect>
+       <x>11</x>
+       <y>90</y>
+       <width>142</width>
+       <height>17</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Получить уведомление</string>
+     </property>
+    </widget>
+    <widget class="QTextEdit" name="tdmainbody">
+     <property name="geometry">
+      <rect>
+       <x>350</x>
+       <y>30</y>
+       <width>381</width>
+       <height>101</height>
+      </rect>
+     </property>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
