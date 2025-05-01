@@ -1,152 +1,123 @@
 import sys
-import smtplib
 from datetime import datetime
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
-from PyQt5 import QtWidgets, QtCore
-import uiDesign.design as design
+from PyQt5 import QtWidgets, QtCore, QtGui
+from uiDesign.design import Ui_MainWindow
 import os
 from dotenv import load_dotenv
+import logging
+import yagmail  # Добавляем импорт yagmail
 
-# Загрузка переменных окружения из файла .env
+logging.basicConfig(level=logging.DEBUG)
+
 load_dotenv()
 
-
-class EmailSenderApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
+class EmailSenderApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        
-        # Проверяем наличие элементов перед подключением
-        if hasattr(self, 'sendButton'):  # если кнопка есть в UI
-            self.sendButton.clicked.connect(self.send_emails)
-        else:
-            print("Warning: sendButton not found in UI")
-            
-        if hasattr(self, 'addDeadlineButton'):
-            self.addDeadlineButton.clicked.connect(self.add_deadline)
-        else:
-            print("Warning: addDeadlineButton not found in UI")
-            
-        # Настройка таблицы дедлайнов
-        self.deadlinesTable.setColumnCount(2)
-        self.deadlinesTable.setHorizontalHeaderLabels(["Дедлайн", "Описание"])
-        self.deadlinesTable.horizontalHeader().setStretchLastSection(True)
 
-        #Список дедлайнов
+        # Проверка и инициализация элементов
+        if not hasattr(self, 'sendButton'):
+            self.sendButton = QtWidgets.QPushButton("Отправить", self)
+            self.sendButton.setGeometry(340, 110, 100, 25)
+
+        # Инициализация
         self.deadlines = []
+        self.yag = None  # Будет инициализирован при первой отправке
+        
+        # Подключение сигналов
+        self.checkBox.stateChanged.connect(self.toggle_notification)
+        self.dateTimeEdit.setDateTime(QtCore.QDateTime.currentDateTime())
+        self.sendButton.clicked.connect(self.send_notification)
 
-        #Настройки SMTP 
-        self.smtp_settings = {
-            'server': 'smtp.gmail.com',
-            'port': 587,
-            'login': os.getenv('GMAIL_USER'),
-            'password': os.getenv('GMAIL_PASSWORD')
-        }
-
+    def toggle_notification(self, state):
+        """Включение/выключение уведомлений"""
+        if state == QtCore.Qt.Checked:
+            self.add_deadline()
+    
     def add_deadline(self):
         """Добавление нового дедлайна"""
-        deadline_date = self.deadlineDate.date().toString("dd.MM.yyyy")
-        deadline_time = self.deadlineTime.time().toString("hh:mm")
-        deadline_datetime_str = f"{deadline_date} {deadline_time}"
-        deadline_description = self.deadlineDescription.toPlainText()
+        deadline_text = self.tdname.toPlainText().strip()
+        deadline_datetime = self.dateTimeEdit.dateTime().toPyDateTime()
         
-        try:
-            deadline_datetime = datetime.strptime(deadline_datetime_str, "%d.%m.%Y %H:%M")
-            self.deadlines.append({
-                'datetime': deadline_datetime,
-                'description': deadline_description,
-                'notified': False
-            })
+        if not deadline_text:
+            QtWidgets.QMessageBox.warning(self, "Ошибка", "Введите описание напоминания")
+            self.checkBox.setChecked(False)
+            return
             
-            # Добавляем в таблицу
-            row_position = self.deadlinesTable.rowCount()
-            self.deadlinesTable.insertRow(row_position)
-            self.deadlinesTable.setItem(row_position, 0, QtWidgets.QTableWidgetItem(deadline_datetime_str))
-            self.deadlinesTable.setItem(row_position, 1, QtWidgets.QTableWidgetItem(deadline_description))
-            
-            self.statusbar.showMessage(f"Дедлайн добавлен: {deadline_datetime_str}", 3000)
-            
-        except ValueError as e:
-            self.statusbar.showMessage(f"Ошибка формата даты: {str(e)}", 5000)
-    
-    def check_deadlines(self):
-        """Проверка дедлайнов и отправка уведомлений"""
-        now = datetime.now()
+        self.deadlines.append({
+            'datetime': deadline_datetime,
+            'description': deadline_text,
+            'notified': False
+        })
         
-        for deadline in self.deadlines:
-            if not deadline['notified'] and now >= deadline['datetime']:
-                # Отправляем уведомление
-                subject = f"Напоминание: дедлайн {deadline['datetime'].strftime('%d.%m.%Y %H:%M')}"
-                body = f"""\
-                <html>
-                  <body>
-                    <p>Добрый день!</p>
-                    <p>Напоминаем о дедлайне:</p>
-                    <p><strong>{deadline['description']}</strong></p>
-                    <p>Дата и время: {deadline['datetime'].strftime('%d.%m.%Y %H:%M')}</p>
-                    <p>Пожалуйста, не забудьте выполнить задачу в срок.</p>
-                  </body>
-                </html>
-                """
-                
-                if self.send_email(subject, body):
-                    deadline['notified'] = True
-                    self.statusbar.showMessage(f"Уведомление о дедлайне отправлено: {deadline['description']}", 3000)
+        current_text = self.tdmainbody.toPlainText()
+        new_text = f"{deadline_datetime.strftime('%d.%m.%Y %H:%M')} - {deadline_text}\n{current_text}"
+        self.tdmainbody.setPlainText(new_text)
+        self.tdname.clear()
     
-    def send_emails(self):
-        """Отправка писем по шаблону (шаблон можно менять)"""
-        recipients = self.recipientsText.toPlainText().split(',')
-        subject = self.subjectText.text()
-        template = self.templateText.toPlainText()
+    def send_notification(self):
+        email = self.emailInput.text().strip()
+        if not email:
+            QtWidgets.QMessageBox.warning(self, "Ошибка", "Введите email получателя")
+            return
 
-        for recipient in recipients:
-            recipient = recipient.strip()
-            if recipient:
-                # Персонализация шаблона
-                personalized_body = template.replace("{имя}", recipient.split('@')[0])
-                
-                if self.send_email(subject, personalized_body, recipient):
-                    self.statusbar.showMessage(f"Письмо отправлено: {recipient}", 3000)
-                else:
-                    self.statusbar.showMessage(f"Ошибка отправки: {recipient}", 5000)
-    
-    def send_email(self, subject, body, recipient=None):
-        """Функция отправки email"""
-        if recipient is None:
-            recipient = self.defaultRecipient.text() or self.smtp_settings['login']
+        if not self.tdname.toPlainText().strip():
+            QtWidgets.QMessageBox.warning(self, "Ошибка", "Введите текст напоминания")
+            return
+
+        # Автоматически добавляем в список дедлайнов
+        if not self.deadlines:
+            self.add_deadline()
+
+        # Отправляем email
+        subject = "Напоминание: " + self.deadlines[-1]['description']
+        body = f"""
+        <h2>Напоминание</h2>
+        <p><strong>Дата и время:</strong> {self.deadlines[-1]['datetime'].strftime('%d.%m.%Y %H:%M')}</p>
+        <p><strong>Описание:</strong> {self.deadlines[-1]['description']}</p>
+        """
         
+        if self.send_email(subject, body, email):
+            QtWidgets.QMessageBox.information(self, "Успех", "Письмо успешно отправлено!")
+        else:
+            QtWidgets.QMessageBox.warning(self, "Ошибка", "Не удалось отправить письмо")
+
+    def send_email(self, subject, body, recipient):
         try:
-            msg = MIMEMultipart()
-            msg['From'] = self.smtp_settings['login']
-            msg['To'] = recipient
-            msg['Subject'] = subject
+            # Инициализируем yagmail при первом вызове
+            if self.yag is None:
+                self.yag = yagmail.SMTP(
+                    user=os.getenv('YANDEX_LOGIN'),
+                    password=os.getenv('YANDEX_PASSWORD'),
+                    host='smtp.yandex.ru',
+                    port=465,
+                    smtp_ssl=True
+                )
             
-            # Добавляем HTML тело письма
-            msg.attach(MIMEText(body, 'html'))
-            
-            # Подключение и отправка
-            with smtplib.SMTP(self.smtp_settings['server'], self.smtp_settings['port']) as server:
-                server.starttls()
-                server.login(self.smtp_settings['login'], self.smtp_settings['password'])
-                server.send_message(msg)
-            
+            self.yag.send(
+                to=recipient,
+                subject=subject,
+                contents=body
+            )
             return True
         except Exception as e:
-            print(f"Ошибка отправки письма: {str(e)}")
+            logging.error(f"Ошибка отправки: {repr(e)}", exc_info=True)
             return False
-        
-
-# class exampleApp(QtWidgets.QMainWindow, design.Ui_MainWindow):
-#     def __init__(self):
-#         super().__init__()
-#         self.setupUi(self)
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
+    app.setStyle('Fusion')
+    
+    # Настройка палитры для тёмной темы
+    palette = QtGui.QPalette()
+    palette.setColor(QtGui.QPalette.Window, QtGui.QColor(53, 53, 53))
+    palette.setColor(QtGui.QPalette.WindowText, QtCore.Qt.white)
+    app.setPalette(palette)
+    
     window = EmailSenderApp()
     window.show()
     app.exec_()
 
-if __name__ == '__main__': 
+if __name__ == '__main__':
     main()
