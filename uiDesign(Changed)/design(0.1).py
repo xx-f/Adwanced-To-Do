@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+# Form implementation generated from reading ui file 'uiDesign/design.ui'
+#
+# Created by: PyQt5 UI code generator 5.15.10
 # Form implementation generated from reading ui file 'design.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.11
@@ -38,6 +41,18 @@ class Ui_MainWindow(object):
         self.tdmainbody = QtWidgets.QTextEdit(self.groupBox)
         self.tdmainbody.setGeometry(QtCore.QRect(350, 30, 381, 101))
         self.tdmainbody.setObjectName("tdmainbody")
+        self.emailInput = QtWidgets.QLineEdit(self.groupBox)
+        self.emailInput.setGeometry(QtCore.QRect(130, 140, 200, 20))
+        self.emailInput.setObjectName("emailInput")
+        self.emailLabel = QtWidgets.QLabel(self.groupBox)
+        self.emailLabel.setGeometry(QtCore.QRect(130, 120, 111, 16))
+        self.emailLabel.setObjectName("emailLabel")
+        self.sendButton = QtWidgets.QPushButton(self.groupBox)
+        self.sendButton.setGeometry(QtCore.QRect(340, 140, 100, 25))
+        self.sendButton.setObjectName("sendButton")
+        MainWindow.setCentralWidget(self.centralwidget)
+
+        self.retranslateUi(MainWindow)
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
@@ -50,3 +65,6 @@ class Ui_MainWindow(object):
         self.groupBox.setTitle(_translate("MainWindow", "GroupBox"))
         self.labeltdname.setText(_translate("MainWindow", "Краткое название для напоминания"))
         self.checkBox.setText(_translate("MainWindow", "Получить уведомление"))
+        self.emailInput.setPlaceholderText(_translate("MainWindow", "Введите email получателя"))
+        self.emailLabel.setText(_translate("MainWindow", "Email получателя:"))
+        self.sendButton.setText(_translate("MainWindow", "Отправить"))
