@@ -2,10 +2,13 @@ import sys
 from datetime import datetime
 from PyQt5 import QtWidgets, QtCore, QtGui
 from uiDesign.design import Ui_MainWindow
+from constants import COLORS, FONTS
 import os
 from dotenv import load_dotenv
 import logging
-import yagmail  # Добавляем импорт yagmail
+import yagmail
+
+
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -15,6 +18,8 @@ class EmailSenderApp(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
+
+        self.setMinimumSize(1000, 600)
 
         # Проверка и инициализация элементов
         if not hasattr(self, 'sendButton'):
@@ -55,6 +60,8 @@ class EmailSenderApp(QtWidgets.QMainWindow, Ui_MainWindow):
         new_text = f"{deadline_datetime.strftime('%d.%m.%Y %H:%M')} - {deadline_text}\n{current_text}"
         self.tdmainbody.setPlainText(new_text)
         self.tdname.clear()
+        self.tdmainbody.setLineWrapMode(QtWidgets.QTextEdit.WidgetWidth)
+        self.tdmainbody.setWordWrapMode(QtGui.QTextOption.WordWrap)
     
     def send_notification(self):
         email = self.emailInput.text().strip()
@@ -109,15 +116,19 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     app.setStyle('Fusion')
     
-    # Настройка палитры для тёмной темы
+    # Установка стиля для всего приложения
     palette = QtGui.QPalette()
-    palette.setColor(QtGui.QPalette.Window, QtGui.QColor(53, 53, 53))
-    palette.setColor(QtGui.QPalette.WindowText, QtCore.Qt.white)
+    palette.setColor(QtGui.QPalette.Window, QtGui.QColor(COLORS['background']))
+    palette.setColor(QtGui.QPalette.WindowText, QtGui.QColor(COLORS['text']))
+    palette.setColor(QtGui.QPalette.Button, QtGui.QColor(COLORS['primary']))
+    palette.setColor(QtGui.QPalette.ButtonText, QtGui.QColor(COLORS['light_text']))
+    palette.setColor(QtGui.QPalette.Base, QtGui.QColor(COLORS['background']))
+    palette.setColor(QtGui.QPalette.Text, QtGui.QColor(COLORS['text']))
     app.setPalette(palette)
     
     window = EmailSenderApp()
     window.show()
     app.exec_()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
