@@ -36,7 +36,7 @@ class Ui_MainWindow(object):
         self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox.setGeometry(QtCore.QRect(
             PADDING, 60, 
-            WINDOW_SIZE.width() - 2*PADDING, 
+            WINDOW_SIZE.width() - PADDING//10,
             WINDOW_SIZE.height() - 80
         ))
         self.groupBox.setFont(FONTS['subtitle'])
@@ -154,18 +154,18 @@ class Ui_MainWindow(object):
         # Основное поле для списка напоминаний
         self.tdmainbody = QtWidgets.QTextEdit(self.groupBox)
         self.tdmainbody.setGeometry(QtCore.QRect(
-            550, 
+            460, 
             40,  
-            500, 
-            450  
+            330, 
+            270  
         ))
-        self.tdmainbody.setMinimumHeight(300)  # Минимальная высота
+        self.tdmainbody.setMinimumHeight(270)  # Минимальная высота
         self.tdmainbody.setStyleSheet(f"""
             QTextEdit {{
                 border: 1px solid #ccc;
                 border-radius: 4px;
-                padding: 15px;  # Увеличим внутренние отступы
-                font-size: 12px;  # Чуть уменьшим шрифт
+                padding: 15px;  
+                font-size: 12px;  
             }}
         """)
         self.tdmainbody.setReadOnly(True)
