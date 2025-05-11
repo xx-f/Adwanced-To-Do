@@ -2,3 +2,7 @@
 .env
 .env.*
 *.env
+
+#Игнорировать __pycache__
+__pycache__/
+uiDesign/__pycache__/

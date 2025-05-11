@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
-<<<<<<< HEAD
   <class>MainWindow</class>
   <widget class="QMainWindow" name="MainWindow">
     <property name="geometry">
@@ -141,7 +140,6 @@
     <connections/>
   </widget>
 </ui>
-=======
  <class>MainWindow</class>
  <widget class="QMainWindow" name="MainWindow">
   <property name="geometry">
@@ -243,4 +241,3 @@
  <resources/>
  <connections/>
 </ui>
->>>>>>> b5cb4786a050256bdbf10372bfdfa4b4e14a896d
