@@ -1,8 +1,5 @@
-Поменял ширину groupbox до 2 вместо 2*PADDING #Когда менял в большую сторону он наоборот уменьшался
-Поменял размеры tdmainbody
-Убрал коменнтарии в tdmainbody.setStyleSheet #Из-за них появлялась ошибка
-Could not parse stylesheet of object QTextEdit(0x2e92145e8c0, name = "tdmainbody")
-Добавил в .gitignore __pycache__ 
-Слегка обновил README.md по замечаниям с задания
+Увеличение размеров окна.
+Добавлена возможность создания описания к событию.
+Уведомление будет отправлено четко в нужную дату.
 
-Version 0.2 (fixes)
+Version 0.3.1

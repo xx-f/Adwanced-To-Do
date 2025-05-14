@@ -12,7 +12,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from constants import COLORS, FONTS, WINDOW_SIZE, PADDING, SPACING, TEXTS
+from constants import COLORS, FONTS, WINDOW_SIZE, PADDING, SPACING, TEXTS, INPUT_FIELDS
 
 
 class Ui_MainWindow(object):
@@ -36,7 +36,7 @@ class Ui_MainWindow(object):
         self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox.setGeometry(QtCore.QRect(
             PADDING, 60, 
-            WINDOW_SIZE.width() - PADDING//10,
+            WINDOW_SIZE.width() - 2*PADDING,
             WINDOW_SIZE.height() - 80
         ))
         self.groupBox.setFont(FONTS['subtitle'])
@@ -56,18 +56,12 @@ class Ui_MainWindow(object):
 
         # Поле названия
         self.labeltdname = QtWidgets.QLabel(self.groupBox)
-        self.labeltdname.setGeometry(QtCore.QRect(
-            PADDING, 30, 
-            300, 20
-        ))
+        self.labeltdname.setGeometry(INPUT_FIELDS['name']['label_geometry'])
         self.labeltdname.setFont(FONTS['regular'])
         self.labeltdname.setObjectName("labeltdname")
 
         self.tdname = QtWidgets.QTextEdit(self.groupBox)
-        self.tdname.setGeometry(QtCore.QRect(
-            PADDING, 50, 
-            300, 40
-        ))
+        self.tdname.setGeometry(INPUT_FIELDS['name']['geometry'])
         self.tdname.setFont(FONTS['regular'])
         self.tdname.setStyleSheet(f"""
             QTextEdit {{
@@ -78,21 +72,34 @@ class Ui_MainWindow(object):
         """)
         self.tdname.setObjectName("tdname")
 
+        # Поле подробного описания
+        self.detailsLabel = QtWidgets.QLabel(self.groupBox)
+        self.detailsLabel.setGeometry(INPUT_FIELDS['details']['label_geometry'])
+        self.detailsLabel.setFont(FONTS['regular'])
+        self.detailsLabel.setObjectName("detailsLabel")
+
+        self.tdDetails = QtWidgets.QTextEdit(self.groupBox)
+        self.tdDetails.setGeometry(INPUT_FIELDS['details']['input_geometry'])
+        self.tdDetails.setFont(FONTS['regular'])
+        self.tdDetails.setStyleSheet(f"""
+            QTextEdit {{
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                padding: 5px;
+            }}
+        """)
+        self.tdDetails.setPlaceholderText(TEXTS['details_placeholder'])
+        self.tdDetails.setObjectName("tdDetails")
+
         # Чекбокс уведомления
         self.checkBox = QtWidgets.QCheckBox(self.groupBox)
-        self.checkBox.setGeometry(QtCore.QRect(
-            PADDING, 100, 
-            200, 20
-        ))
+        self.checkBox.setGeometry(INPUT_FIELDS['notification']['geometry'])
         self.checkBox.setFont(FONTS['regular'])
         self.checkBox.setObjectName("checkBox")
 
         # Поле даты и времени
         self.dateTimeEdit = QtWidgets.QDateTimeEdit(self.groupBox)
-        self.dateTimeEdit.setGeometry(QtCore.QRect(
-            PADDING, 130, 
-            200, 30
-        ))
+        self.dateTimeEdit.setGeometry(INPUT_FIELDS['datetime']['geometry'])
         self.dateTimeEdit.setFont(FONTS['regular'])
         self.dateTimeEdit.setCalendarPopup(True)
         self.dateTimeEdit.setStyleSheet(f"""
@@ -106,18 +113,12 @@ class Ui_MainWindow(object):
 
         # Поля для email
         self.emailLabel = QtWidgets.QLabel(self.groupBox)
-        self.emailLabel.setGeometry(QtCore.QRect(
-            PADDING, 180, 
-            150, 20
-        ))
+        self.emailLabel.setGeometry(INPUT_FIELDS['email']['label_geometry'])
         self.emailLabel.setFont(FONTS['regular'])
         self.emailLabel.setObjectName("emailLabel")
 
         self.emailInput = QtWidgets.QLineEdit(self.groupBox)
-        self.emailInput.setGeometry(QtCore.QRect(
-            PADDING, 200, 
-            250, 30
-        ))
+        self.emailInput.setGeometry(INPUT_FIELDS['email']['input_geometry'])
         self.emailInput.setFont(FONTS['regular'])
         self.emailInput.setStyleSheet(f"""
             QLineEdit {{
@@ -130,12 +131,7 @@ class Ui_MainWindow(object):
 
         # Кнопка отправки
         self.sendButton = QtWidgets.QPushButton(self.groupBox)
-        self.sendButton.setGeometry(QtCore.QRect(
-            PADDING + 300,
-            250,          
-            120,          
-            40            
-        ))
+        self.sendButton.setGeometry(INPUT_FIELDS['send_button']['geometry'])
         self.sendButton.setFont(FONTS['regular'])
         self.sendButton.setStyleSheet(f"""
             QPushButton {{
@@ -153,19 +149,14 @@ class Ui_MainWindow(object):
 
         # Основное поле для списка напоминаний
         self.tdmainbody = QtWidgets.QTextEdit(self.groupBox)
-        self.tdmainbody.setGeometry(QtCore.QRect(
-            460, 
-            40,  
-            330, 
-            270  
-        ))
-        self.tdmainbody.setMinimumHeight(270)  # Минимальная высота
+        self.tdmainbody.setGeometry(INPUT_FIELDS['main_body']['geometry'])
+        self.tdmainbody.setMinimumHeight(INPUT_FIELDS['main_body']['min_height'])
         self.tdmainbody.setStyleSheet(f"""
             QTextEdit {{
                 border: 1px solid #ccc;
                 border-radius: 4px;
-                padding: 15px;  
-                font-size: 12px;  
+                padding: 15px;
+                font-size: 12px;
             }}
         """)
         self.tdmainbody.setReadOnly(True)
@@ -180,8 +171,10 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", TEXTS['main_label']))
         self.groupBox.setTitle(_translate("MainWindow", TEXTS['group_box_title']))
         self.labeltdname.setText(_translate("MainWindow", TEXTS['name_label']))
+        self.detailsLabel.setText(_translate("MainWindow", TEXTS['details_label']))
         self.checkBox.setText(_translate("MainWindow", TEXTS['notification_text']))
         self.emailLabel.setText(_translate("MainWindow", TEXTS['email_label']))
         self.emailInput.setPlaceholderText(_translate("MainWindow", TEXTS['email_placeholder']))
         self.sendButton.setText(_translate("MainWindow", TEXTS['send_button']))
         self.tdmainbody.setPlaceholderText(_translate("MainWindow", TEXTS['body_placeholder']))
+        self.tdDetails.setPlaceholderText(_translate("MainWindow", TEXTS['details_placeholder']))
