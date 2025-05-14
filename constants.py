@@ -75,3 +75,4 @@ INPUT_FIELDS = {
         'label_geometry': QtCore.QRect(20, 100, 250, 16)
     }
 }
+ 
