@@ -9,6 +9,9 @@ import logging
 import yagmail
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.date import DateTrigger
+from database import *
+
+create_table()
 
 logging.basicConfig(level=logging.DEBUG)
 load_dotenv()
@@ -57,6 +60,8 @@ class EmailSenderApp(QtWidgets.QMainWindow, Ui_MainWindow):
             'details': deadline_details,  # Сохраняем подробное описание
             'notified': False
         })
+
+        insert_deadline(deadline_text, deadline_details, deadline_datetime)
 
         current_text = self.tdmainbody.toPlainText()
         # Добавляем подробное описание, если оно есть

@@ -6,3 +6,6 @@
 #Игнорировать __pycache__
 __pycache__/
 uiDesign/__pycache__/
+
+#Игнорировать db
+*.db
