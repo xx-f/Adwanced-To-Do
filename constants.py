@@ -27,18 +27,21 @@ TEXTS = {
     'main_label': 'Advanced To Do',
     'group_box_title': 'Создание напоминания',
     'name_label': 'Краткое название для напоминания',
+    'details_label': 'Подробное описание:', 
     'notification_text': 'Получить уведомление',
     'email_label': 'Email получателя:',
     'email_placeholder': 'example@email.com',
     'send_button': 'Отправить',
-    'body_placeholder': 'Здесь будут отображаться ваши напоминания' 
+    'body_placeholder': 'Здесь будут отображаться ваши напоминания',
+    'details_placeholder': 'Подробное описание (необязательно)' 
 }
 
-# Размеры и позиции элементов
-WINDOW_SIZE = QtCore.QSize(800, 400)
-GROUP_BOX_POS = QtCore.QRect(10, 40, 780, 350)
+# Размеры
+WINDOW_SIZE = QtCore.QSize(1100, 650)  # Увеличил размер окна
+PADDING = 20
+SPACING = 15
 
-# Элементы ввода
+# Обновим INPUT_FIELDS
 INPUT_FIELDS = {
     'name': {
         'geometry': QtCore.QRect(20, 60, 300, 30),
@@ -46,24 +49,29 @@ INPUT_FIELDS = {
         'label_geometry': QtCore.QRect(20, 40, 250, 16)
     },
     'datetime': {
-        'geometry': QtCore.QRect(20, 120, 150, 25)
+        'geometry': QtCore.QRect(20, 240, 200, 30)  # Обновленная позиция
     },
     'notification': {
-        'geometry': QtCore.QRect(20, 100, 150, 20),
+        'geometry': QtCore.QRect(20, 210, 200, 20),
         'text': 'Получить уведомление'
     },
     'email': {
-        'input_geometry': QtCore.QRect(20, 180, 250, 25),
+        'input_geometry': QtCore.QRect(20, 310, 250, 30),
         'label': 'Email получателя:',
-        'label_geometry': QtCore.QRect(20, 160, 150, 16),
+        'label_geometry': QtCore.QRect(20, 290, 150, 16),
         'placeholder': 'Введите email получателя'
     },
     'send_button': {
-        'geometry': QtCore.QRect(300, 250, 120, 40),
+        'geometry': QtCore.QRect(300, 360, 120, 40),
         'text': 'Отправить'
     },
     'main_body': {
-        'geometry': QtCore.QRect(550, 40, 500, 450), 
+        'geometry': QtCore.QRect(460, 40, 500, 450),  # Увеличил размер
         'min_height': 300 
+    },
+    'details': {
+        'input_geometry': QtCore.QRect(20, 120, 300, 80),
+        'label': 'Подробное описание:',
+        'label_geometry': QtCore.QRect(20, 100, 250, 16)
     }
 }
