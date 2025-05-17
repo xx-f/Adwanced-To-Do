@@ -29,7 +29,7 @@
 
 **⚙️ Установка и настройка**
 1.  Установка зависимостей
-2. pip install PyQt5 yagmail python-dotenv apscheduler
+2. pip install PyQt5 yagmail python-dotenv apscheduler fpdf
 4.  Настройка почтового аккаунта
 5. 	Создайте файл .env в корне проекта
 6.	Добавьте учетные данные Yandex или любой другой почты:
